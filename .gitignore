@@ -9,3 +9,5 @@ public/hot
 storage/*.key
 .phpunit.result.cache
 *.log
+database/database.sqlite
+storage/logs/*.log
