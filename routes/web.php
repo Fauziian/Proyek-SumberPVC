@@ -77,6 +77,13 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/hr/attendance/check-in', [AbsensiController::class, 'checkIn'])->name('attendance.check-in');
         Route::put('/hr/attendance/{attendance}/check-out', [AbsensiController::class, 'checkOut'])->name('attendance.check-out');
         Route::delete('/hr/attendance/{attendance}', [AbsensiController::class, 'destroy'])->name('attendance.destroy');
+
+        // TASK-021 — Modul Payroll: kalkulasi gaji per jam, finalisasi, dan slip PDF
+        Route::get('/hr/payroll', [PayrollController::class, 'index'])->name('payroll.index');
+        Route::post('/hr/payroll/calculate', [PayrollController::class, 'calculatePeriod'])->name('payroll.calculate');
+        Route::get('/hr/payroll/{payroll}', [PayrollController::class, 'show'])->name('payroll.show');
+        Route::put('/hr/payroll/{payroll}/finalize', [PayrollController::class, 'finalize'])->name('payroll.finalize');
+        Route::get('/hr/payroll/{payroll}/pdf', [PayrollController::class, 'downloadPdf'])->name('payroll.pdf');
     });
 
     // Route terproteksi Role: warehouse / Gudang (Spatie RoleMiddleware)
