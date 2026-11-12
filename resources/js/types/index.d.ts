@@ -3,6 +3,7 @@ export interface User {
     nama: string;
     username: string;
     role: string;
+    roles?: string[];
     is_active?: boolean;
 }
 
