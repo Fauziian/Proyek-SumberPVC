@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\StockController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,6 +32,23 @@ Route::middleware(['auth', 'active'])->group(function () {
                 'role' => 'admin',
             ]);
         })->name('admin.dashboard');
+
+        // TASK-019 — Modul Admin: manajemen pengguna
+        Route::get('/admin/users', [UserController::class, 'index'])->name('users.index');
+        Route::post('/admin/users', [UserController::class, 'store'])->name('users.store');
+        Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::put('/admin/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+        Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+        // TASK-019 — Modul Admin: master produk PVC (outsole, tali jepit, boloni gunung)
+        Route::get('/admin/master-products', [StockController::class, 'master'])->name('admin.master-products');
+        Route::post('/admin/master-products', [StockController::class, 'storeItem'])->name('admin.master-products.store');
+        Route::put('/admin/master-products/{item}', [StockController::class, 'updateItem'])->name('admin.master-products.update');
+        Route::delete('/admin/master-products/{item}', [StockController::class, 'destroyItem'])->name('admin.master-products.destroy');
+
+        // TASK-019 — Modul Admin: konfigurasi tarif gaji
+        Route::get('/admin/payroll-settings', [PayrollController::class, 'settings'])->name('payroll.settings');
+        Route::post('/admin/payroll-settings', [PayrollController::class, 'updateSettings'])->name('payroll.settings.update');
     });
 
     // Route terproteksi Role: hr (Spatie RoleMiddleware)
