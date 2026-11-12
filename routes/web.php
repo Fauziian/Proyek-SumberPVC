@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\UserController;
@@ -49,6 +51,9 @@ Route::middleware(['auth', 'active'])->group(function () {
         // TASK-019 — Modul Admin: konfigurasi tarif gaji
         Route::get('/admin/payroll-settings', [PayrollController::class, 'settings'])->name('payroll.settings');
         Route::post('/admin/payroll-settings', [PayrollController::class, 'updateSettings'])->name('payroll.settings.update');
+
+        // TASK-020 — Admin hanya melihat data karyawan (tanpa tambah/ubah/hapus)
+        Route::get('/admin/employees', [KaryawanController::class, 'index'])->name('admin.employees');
     });
 
     // Route terproteksi Role: hr (Spatie RoleMiddleware)
@@ -60,6 +65,18 @@ Route::middleware(['auth', 'active'])->group(function () {
                 'role' => 'hr',
             ]);
         })->name('hr.dashboard');
+
+        // TASK-020 — Modul HR: data master karyawan
+        Route::get('/hr/employees', [KaryawanController::class, 'index'])->name('employees.index');
+        Route::post('/hr/employees', [KaryawanController::class, 'store'])->name('employees.store');
+        Route::put('/hr/employees/{employee}', [KaryawanController::class, 'update'])->name('employees.update');
+        Route::delete('/hr/employees/{employee}', [KaryawanController::class, 'destroy'])->name('employees.destroy');
+
+        // TASK-020 — Modul HR: pencatatan absensi harian (WIB)
+        Route::get('/hr/attendance', [AbsensiController::class, 'index'])->name('attendance.index');
+        Route::post('/hr/attendance/check-in', [AbsensiController::class, 'checkIn'])->name('attendance.check-in');
+        Route::put('/hr/attendance/{attendance}/check-out', [AbsensiController::class, 'checkOut'])->name('attendance.check-out');
+        Route::delete('/hr/attendance/{attendance}', [AbsensiController::class, 'destroy'])->name('attendance.destroy');
     });
 
     // Route terproteksi Role: warehouse / Gudang (Spatie RoleMiddleware)
