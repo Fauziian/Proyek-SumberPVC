@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Models\Role;
@@ -92,6 +93,14 @@ class User extends Authenticatable
 
         Role::findOrCreate($this->role, $this->guard_name);
         $this->syncRoles([$this->role]);
+    }
+
+    /**
+     * Data karyawan yang terhubung dengan akun ini (opsional, lewat karyawan.id_pengguna).
+     */
+    public function karyawan(): HasOne
+    {
+        return $this->hasOne(Karyawan::class, 'id_pengguna');
     }
 
     /**
